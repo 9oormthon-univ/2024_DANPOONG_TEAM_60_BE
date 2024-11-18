@@ -1,0 +1,43 @@
+spring:
+  application:
+    name: goo
+
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/goo?serverTimezone=Asia/Seoul
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+
+  jpa:
+    database-platform: org.hibernate.dialect.MySQLDialect
+    show-sql: true
+    hibernate:
+      ddl-auto: create
+    generate-ddl: false
+    properties:
+      hibernate:
+        format_sql: true
+        show_sql: true
+
+  security:
+    oauth2:
+      client:
+        registration:
+          kakao:
+            client_id: ${kakao_client_id}
+            client_secret: ${kakao_client_secret}
+            client-authentication-method: client_secret_post
+            authorization-grant-type: authorization_code
+            redirect_uri: "http://localhost:8080/login/oauth2/code/kakao"
+            redirect_logout_uri: ${kakao_redirect_logout_uri}
+            scope: "profile_nickname, account_email"
+        provider:
+          kakao:
+            authorization-uri: https://kauth.kakao.com/oauth/authorize
+            token-uri: https://kauth.kakao.com/oauth/token
+            user-info-uri: https://kapi.kakao.com/v2/user/me
+            user-name-attribute: id
+
+
+
+
