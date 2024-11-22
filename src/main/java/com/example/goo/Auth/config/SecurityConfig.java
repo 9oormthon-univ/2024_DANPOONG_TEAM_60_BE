@@ -20,10 +20,10 @@ import java.util.Arrays;
 @EnableWebSecurity
 public class SecurityConfig {
 
-    @Value("${kakao.client_id}")
+    @Value("")
     private String clientId;
 
-    @Value("${kakao.redirect_uri}")
+    @Value("")
     private String redirectUri;
 
     private final CustomOAuth2UserService customOAuth2UserService;
