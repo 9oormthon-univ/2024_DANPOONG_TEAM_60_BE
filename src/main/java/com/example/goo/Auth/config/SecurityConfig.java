@@ -42,7 +42,8 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-
+                .csrf(csrf -> csrf.disable()) // CSRF 비활성화
+                .cors(cors -> cors.configurationSource(corsConfigurationSource())) // CORS 명시적 활성화
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/api/login", "/api/logout", "/api/me", "/notifications/add-token").permitAll()
                         .anyRequest().authenticated()
@@ -77,9 +78,8 @@ public class SecurityConfig {
                                 e.printStackTrace();
                             }
                         })
-                )
-                .csrf(csrf -> csrf.disable()) // CSRF 비활성화
-                .cors(cors -> cors.configurationSource(corsConfigurationSource())); // CORS 명시적 활성화
+                );
+
 
         return http.build();
     }
