@@ -42,9 +42,10 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-
+                .csrf(csrf -> csrf.disable()) // CSRF 비활성화
+                .cors(cors -> cors.configurationSource(corsConfigurationSource())) // CORS 명시적 활성화
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/api/login", "/api/logout", "/api/me").permitAll()
+                        .requestMatchers("/api/login", "/api/logout", "/api/me", "/api/token").permitAll()
                         .anyRequest().authenticated()
                 )
                 .oauth2Login(oauth2 -> oauth2
@@ -52,23 +53,23 @@ public class SecurityConfig {
                                 .userService(customOAuth2UserService)
                         )
                         .successHandler((request, response, authentication) -> {
-                            // OAuth2 인증 객체에서 AccessToken 가져오기
-                            String accessToken = getAccessToken(authentication);
+                            OAuth2AuthorizedClient authorizedClient = authorizedClientService.loadAuthorizedClient(
+                                    ((OAuth2AuthenticationToken) authentication).getAuthorizedClientRegistrationId(),
+                                    authentication.getName());
 
-                            // HTTP 헤더에 AccessToken 추가
-                            response.setHeader("Authorization", "Bearer " + accessToken);
+                            String accessToken = authorizedClient.getAccessToken().getTokenValue();
+                            String redirectUrl = "http://localhost:3000/loginsuccess?access_token=" + accessToken;
 
-                            // 로그인 성공 후 리다이렉션
-                            response.sendRedirect("http://221.142.24.218:80/loginsuccess");
+                            response.sendRedirect(redirectUrl);
                         })
                         .failureHandler((request, response, exception) -> {
                             // 로그인 실패 시 React 로그인 실패 페이지로 리디렉션
-                            response.sendRedirect("http://221.142.24.218:80/loginfailed");
+                            response.sendRedirect("http://localhost:3000/loginfailed");
                         })
                 )
                 .logout(logout -> logout
                         .logoutUrl("/api/logout")
-                        .logoutSuccessUrl("http://221.142.24.218:80/logoutsuccess") // 로그아웃 성공 후 React로 리디렉션
+                        .logoutSuccessUrl("http://localhost:3000/logoutsuccess") // 로그아웃 성공 후 React로 리디렉션
                         .addLogoutHandler((request, response, authentication) -> {
                             String logoutUrl = "https://kauth.kakao.com/oauth/logout?client_id=" + clientId + "&logout_redirect_uri=" + redirectUri;
                             try {
@@ -77,9 +78,8 @@ public class SecurityConfig {
                                 e.printStackTrace();
                             }
                         })
-                )
-                .csrf(csrf -> csrf.disable()) // CSRF 비활성화
-                .cors(cors -> cors.configurationSource(corsConfigurationSource())); // CORS 명시적 활성화
+                );
+
 
         return http.build();
     }
@@ -97,7 +97,7 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000", "http://221.142.24.218:80")); // React 도메인
+        configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000", "http://44.212.10.165")); // React 도메인
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS")); // 허용할 메서드
         configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type")); // 허용할 헤더
         configuration.setAllowCredentials(true); // 세션 쿠키 허용
