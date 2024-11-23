@@ -24,10 +24,10 @@ import java.util.Arrays;
 @EnableWebSecurity
 public class SecurityConfig {
 
-    @Value("ed96b0600f58295622d71d0a86f7e1d6")
+    @Value("94d54435b2c08988febb12b2d5d13854")
     private String clientId;
 
-    @Value("http://44.212.10.165:8080")
+    @Value("http://3.93.236.79 :8080")
     private String redirectUri;
 
     private final CustomOAuth2UserService customOAuth2UserService;
