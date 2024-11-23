@@ -7,5 +7,4 @@ import java.util.List;
 
 public interface FcmRepository extends JpaRepository<Fcm, Long> {
     List<Fcm> findAllByFcmTokenIsNotNull();
-
 }
