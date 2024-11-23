@@ -31,8 +31,11 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 
 	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
-	implementation 'mysql:mysql-connector-java:8.0.33'
 
+
+	implementation 'org.springframework.boot:spring-boot-starter'
+	implementation 'com.google.firebase:firebase-admin:9.2.0'
+	implementation group: 'com.squareup.okhttp3', name: 'okhttp', version: '4.2.2'
 
 	compileOnly 'org.projectlombok:lombok'
 	runtimeOnly 'com.mysql:mysql-connector-j'
@@ -40,7 +43,6 @@ dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.security:spring-security-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
-
 
 
 }
