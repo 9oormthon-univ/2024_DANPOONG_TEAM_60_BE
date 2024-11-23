@@ -4,12 +4,12 @@ spring:
 
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/goo?serverTimezone=Asia/Seoul
-    username: ${DB_USERNAME}
-    password: ${DB_PASSWORD}
+    url: jdbc:mysql://44.212.10.165:3306/goo?serverTimezone=Asia/Seoul
+    username: 'root'
+    password: ''
 
   jpa:
-    database-platform: org.hibernate.dialect.MySQLDialect
+    #    database-platform: org.hibernate.dialect.MySQLDialect
     show-sql: true
     hibernate:
       ddl-auto: create
@@ -24,12 +24,15 @@ spring:
       client:
         registration:
           kakao:
-            client_id: ${kakao_client_id}
-            client_secret: ${kakao_client_secret}
+            #            client_id: ${kakao_client_id}
+            client_id: "ed96b0600f58295622d71d0a86f7e1d6"
+            #            client_secret: ${kakao_client_secret}
+            client_secret: "nLkCEhlqnNsxYD4QC5PWN9JXz51XRMYv"
             client-authentication-method: client_secret_post
             authorization-grant-type: authorization_code
-            redirect_uri: "http://localhost:8080/login/oauth2/code/kakao"
-            redirect_logout_uri: ${kakao_redirect_logout_uri}
+            redirect_uri: "http://44.212.10.165:8080/login/oauth2/code/kakao"
+            #            redirect_logout_uri: ${kakao_redirect_logout_uri}
+            redirect_logout_uri: "http://44.212.10.165:8080"
             scope: "profile_nickname, account_email"
         provider:
           kakao:
